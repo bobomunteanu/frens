@@ -402,7 +402,7 @@ const BurnRandomNFT = () => {
     // Check if the user has any NFTs from the collection
     if (collectionNFTs.length === 0) {
       console.log("User does not have any NFTs from the collection");
-      //return;
+      return;
     }
 
     // Pick a random NFT from the collection
