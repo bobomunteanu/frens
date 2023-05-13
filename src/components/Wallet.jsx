@@ -85,7 +85,7 @@ function WalletActions() {
 async function addAddressToFirebase(publicKey) {
   const userData = {
     id: publicKey,
-    amount: 0,
+    amount: 1,
   };
 
   const registered = await isPublicKeyRegistered(publicKey);
@@ -102,6 +102,9 @@ async function addAddressToFirebase(publicKey) {
       .then((response) => {
         if (response.ok) {
           console.log("Data added successfully");
+          setTimeout(() => {
+            window.location.reload(false);
+          }, 500);
         } else {
           throw new Error("Error adding data to Firebase");
         }

@@ -15,7 +15,7 @@ const Leaderboard = () => {
           const leaderboard = Object.entries(leaderboardResponse.data).map(
             ([publicKey, { amount }]) => ({
               publicKey,
-              amount,
+              amount: amount - 1,
             })
           );
           leaderboard.sort((a, b) => b.amount - a.amount); // Sort in descending order
@@ -28,8 +28,8 @@ const Leaderboard = () => {
 
     fetchLeaderboardData();
 
-    // Fetch leaderboard data every 20 seconds
-    const interval = setInterval(fetchLeaderboardData, 20000);
+    // Fetch leaderboard data every 5 seconds
+    const interval = setInterval(fetchLeaderboardData, 5000);
 
     return () => {
       clearInterval(interval);
