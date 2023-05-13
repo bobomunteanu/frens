@@ -1,12 +1,14 @@
 .numericinput {
-    margin-bottom: 10vh;
+    margin-bottom: 2vh;
+    margin-top: 5vh;
     height: 7vh;
     width: 7vw;
     text-align: center;
-    border-radius: 15px;
-    border-width: 0px;
+    border-top-width: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+    border-bottom-width: 3px;
     color: #eeeeee;
-    background: #1a1a1a;
-    box-shadow:  20px 20px 60px #080808,
-                -20px -20px 60px #080808;
+    background-color: #333;
+    border-color: darkorange
 }

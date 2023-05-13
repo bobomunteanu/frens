@@ -18,6 +18,7 @@ import { clusterApiUrl } from "@solana/web3.js";
 import * as solanaWeb3 from "@solana/web3.js";
 import * as splToken from "@solana/spl-token";
 import NumericInput from "./NumericInput";
+import hashlist from "../assets/hashlist.json";
 
 // Default styles that can be overridden by your app
 import "@solana/wallet-adapter-react-ui/styles.css";
@@ -57,10 +58,13 @@ function Wallet() {
         <WalletModalProvider>
           <WalletMultiButton />
         </WalletModalProvider>
-        <div style={{ marginBottom: "20vh" }}>
-          <h1>Burn Frens</h1>
+        <div style={{ marginBottom: "10vh" }}>
+          <h1 style={{ color: "darkorange" }}>Burn Frens</h1>
         </div>
+        <img src="src/assets/tkfrens.png" width={"50%"}></img>
+        <img src="src/assets/zgfrens.png" width={"50%"}></img>
         <BurnButton></BurnButton>
+        <BurnRandomNFT></BurnRandomNFT>
         <WalletActions />
       </WalletProvider>
     </ConnectionProvider>
@@ -73,7 +77,7 @@ function WalletActions() {
 
   useEffect(() => {
     if (publicKey) {
-      console.log(wallet); // Print public key to the console
+      //console.log(wallet); // Print public key to the console
       localStorage.setItem("publicKey", publicKey.toBase58());
       addAddressToFirebase(publicKey.toBase58());
     }
@@ -86,6 +90,7 @@ async function addAddressToFirebase(publicKey) {
   const userData = {
     id: publicKey,
     amount: 1,
+    nfts: 1,
   };
 
   const registered = await isPublicKeyRegistered(publicKey);
@@ -209,6 +214,7 @@ const BurnButton = () => {
               preflightCommitment: "processed",
             }
           );
+          connection.getaccountorde;
 
           let tokens = await fetchTokensForUser(publicKey.toBase58());
           console.log(tokens);
@@ -245,8 +251,9 @@ const BurnButton = () => {
         value={textFieldValue}
         onChange={handleTextFieldChange}
       ></NumericInput>
-      <p></p>
-      <button onClick={connectToSolana}>Burn!</button>
+      <button style={{ width: "10vw" }} onClick={connectToSolana}>
+        Burn $FRENS!
+      </button>
     </div>
   );
 };
@@ -290,6 +297,28 @@ async function fetchTokensForUser(publicKey) {
   }
 }
 
+async function fetchNFTsForUser(publicKey) {
+  try {
+    const response = await fetch(
+      `https://burnfrens-default-rtdb.europe-west1.firebasedatabase.app/users/${publicKey}.json`
+    );
+
+    if (!response.ok) {
+      throw new Error("Error fetching user data from Firebase");
+    }
+
+    const userData = await response.json();
+    if (userData && userData.nfts) {
+      return userData.nfts;
+    } else {
+      throw new Error("User data not found");
+    }
+  } catch (error) {
+    console.log(`Error fetching user data: ${error.message}`);
+    // Handle the error as needed (e.g., show an error message to the user)
+  }
+}
+
 async function updateTokensForUser(publicKey, newAmountOfTokens) {
   try {
     const response = await fetch(
@@ -297,6 +326,27 @@ async function updateTokensForUser(publicKey, newAmountOfTokens) {
       {
         method: "PATCH",
         body: JSON.stringify({ amount: newAmountOfTokens }),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Error updating user data in Firebase");
+    }
+
+    console.log("Tokens updated successfully");
+  } catch (error) {
+    console.log(`Error updating user data: ${error.message}`);
+    // Handle the error as needed (e.g., show an error message to the user)
+  }
+}
+
+async function updateNFTsForUser(publicKey, newAmountOfNFTS) {
+  try {
+    const response = await fetch(
+      `https://burnfrens-default-rtdb.europe-west1.firebasedatabase.app/users/${publicKey}.json`,
+      {
+        method: "PATCH",
+        body: JSON.stringify({ nfts: newAmountOfNFTS }),
       }
     );
 
@@ -329,5 +379,141 @@ async function isPublicKeyRegistered(publicKey) {
     return false;
   }
 }
+
+const BurnRandomNFT = () => {
+  const { publicKey, wallet } = useWallet();
+  const [burnedNFT, setBurnedNFT] = useState(null);
+
+  const connectToWallet = async () => {
+    const connection = new solanaWeb3.Connection(
+      "https://solana-mainnet.g.alchemy.com/v2/fwvggG98Myaf7kS7EEu3qdxOa7n6alpT"
+    );
+
+    console.log(publicKey);
+
+    // Fetch the user's NFTs
+    const nfts = await fetchUserNFTs(publicKey, connection);
+
+    // Filter the user's NFTs to find those from the collection
+    const collectionNFTs = nfts.filter((nft) =>
+      hashlist.some((hashlist) => hashlist.includes(nft.mintAddress))
+    );
+
+    // Check if the user has any NFTs from the collection
+    if (collectionNFTs.length === 0) {
+      console.log("User does not have any NFTs from the collection");
+      //return;
+    }
+
+    // Pick a random NFT from the collection
+    const randomIndex = Math.floor(Math.random() * collectionNFTs.length);
+    const randomNFT = collectionNFTs[randomIndex];
+    const MINT_PUBLIC_KEY = new solanaWeb3.PublicKey(randomNFT.mintAddress);
+
+    const tk = await findTokenAccountAddress(
+      publicKey,
+      MINT_PUBLIC_KEY,
+      connection
+    );
+
+    const instruction = splToken.createBurnInstruction(
+      tk,
+      MINT_PUBLIC_KEY,
+      publicKey,
+      1,
+      [publicKey]
+    );
+
+    try {
+      // Create a transaction and add the burn instruction
+      const transaction = new solanaWeb3.Transaction().add(instruction);
+
+      // Get the recent blockhash
+      const { blockhash } = await connection.getLatestBlockhash();
+
+      // Set the transaction's blockhash and fee payer
+      transaction.recentBlockhash = blockhash;
+      transaction.feePayer = publicKey;
+
+      console.log(transaction);
+
+      // Sign the transaction with the wallet adapter
+      const signedTransaction = await wallet.adapter.signTransaction(
+        transaction
+      );
+
+      console.log(signedTransaction);
+
+      // Send the signed transaction
+      const signature = await connection.sendRawTransaction(
+        signedTransaction.serialize(),
+        {
+          skipPreflight: true,
+          signers: [publicKey],
+          preflightCommitment: "processed",
+        }
+      );
+
+      let nfts = await fetchNFTsForUser(publicKey.toBase58());
+      console.log(nfts);
+      nfts = parseInt(nfts) + parseInt(1);
+
+      if (signature) {
+        const x = await updateNFTsForUser(publicKey, nfts);
+        window.location.reload(true);
+      }
+
+      return signedTransaction;
+
+      console.log("Transaction sent:", signedTransaction.signature);
+    } catch (error) {
+      console.error("Error while burning tokens:", error);
+    }
+
+    console.log(
+      `Successfully burned ${numTokensToBurn} tokens with signature ${signature}`
+    );
+
+    // Update the state to reflect the burned NFT
+    setBurnedNFT(randomNFT);
+  };
+
+  return (
+    <div style={{ marginTop: "2vh" }}>
+      <button style={{ width: "10vw" }} onClick={connectToWallet}>
+        Burn a FRENS NFT!
+      </button>
+      {burnedNFT && <p>Burned NFT ID: {burnedNFT.id}</p>}
+    </div>
+  );
+};
+
+const fetchUserNFTs = async (pk, connection) => {
+  const publicKey = pk.toString();
+
+  // Get the user's token accounts to identify the NFTs
+  const tokenAccounts = await connection.getParsedTokenAccountsByOwner(
+    new solanaWeb3.PublicKey(publicKey),
+    {
+      programId: new solanaWeb3.PublicKey(
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+      ),
+    } // Token program ID for Solana
+  );
+
+  console.log(tokenAccounts);
+
+  // Filter the token accounts to find NFTs
+  const nfts = tokenAccounts.value.map((account) => {
+    const mintAddress = account.account.data.parsed.info.mint;
+    return {
+      id: account.pubkey.toBase58(),
+      mintAddress,
+      // Add other relevant properties as needed
+    };
+  });
+
+  return nfts;
+};
 
 export default Wallet;

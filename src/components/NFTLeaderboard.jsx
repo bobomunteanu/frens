@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-const Leaderboard = () => {
+const NFTLeaderboard = () => {
   const [leaderboardData, setLeaderboardData] = useState([]);
 
   useEffect(() => {
@@ -13,12 +13,12 @@ const Leaderboard = () => {
 
         if (leaderboardResponse.data) {
           const leaderboard = Object.entries(leaderboardResponse.data).map(
-            ([publicKey, { amount }]) => ({
+            ([publicKey, { nfts }]) => ({
               publicKey,
-              amount: amount - 1,
+              nfts: nfts - 1,
             })
           );
-          leaderboard.sort((a, b) => b.amount - a.amount); // Sort in descending order
+          leaderboard.sort((a, b) => b.nfts - a.nfts); // Sort in descending order
           setLeaderboardData(leaderboard.slice(0, 20)); // Get the first 10 accounts
         }
       } catch (error) {
@@ -38,7 +38,7 @@ const Leaderboard = () => {
 
   return (
     <div style={{ position: "relative" }}>
-      <h1>$FRENS Leaderboard</h1>
+      <h1>NFT Leaderboard</h1>
       <table>
         <thead>
           <tr>
@@ -48,13 +48,13 @@ const Leaderboard = () => {
           </tr>
         </thead>
         <tbody>
-          {leaderboardData.map(({ publicKey, amount }, index) => (
+          {leaderboardData.map(({ publicKey, nfts }, index) => (
             <tr key={publicKey}>
               <td>#{index + 1}</td>
               <td>{publicKey}</td>
               <td style={{ color: "darkorange" }}>
-                {amount}
-                <img src="src/assets/tkfrens.png" width={"20vh"} />
+                {nfts}
+                <img src="src/assets/zgfrens.png" width={"20vh"} />
               </td>
             </tr>
           ))}
@@ -64,4 +64,4 @@ const Leaderboard = () => {
   );
 };
 
-export default Leaderboard;
+export default NFTLeaderboard;
