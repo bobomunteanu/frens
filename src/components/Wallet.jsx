@@ -123,7 +123,7 @@ const BurnButton = () => {
   const connectToSolana = async () => {
     // Connect to the Solana network
     const connection = new solanaWeb3.Connection(
-      "https://cool-virulent-hill.solana-mainnet.discover.quiknode.pro/8be5681262dde1987a610c1f078074382f6a3ac3/"
+      "https://solana-mainnet.g.alchemy.com/v2/fwvggG98Myaf7kS7EEu3qdxOa7n6alpT"
     );
 
     try {
@@ -173,7 +173,7 @@ const BurnButton = () => {
           tk,
           MINT_PUBLIC_KEY,
           publicKey,
-          numTokensToBurn,
+          numTokensToBurn * solanaWeb3.LAMPORTS_PER_SOL,
           [publicKey]
         );
 
