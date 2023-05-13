@@ -1,0 +1,12 @@
+.numericinput {
+    margin-bottom: 10vh;
+    height: 7vh;
+    width: 7vw;
+    text-align: center;
+    border-radius: 15px;
+    border-width: 0px;
+    color: #eeeeee;
+    background: #1a1a1a;
+    box-shadow:  20px 20px 60px #080808,
+                -20px -20px 60px #080808;
+}

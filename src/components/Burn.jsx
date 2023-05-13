@@ -1,4 +1,5 @@
 import * as solanaWeb3 from '@solana/web3.js';
+import * as splToken from '@solana/spl-token';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { WalletError } from '@solana/wallet-adapter-base';
 
@@ -6,25 +7,31 @@ const MyComponent = () => {
 
   const connectToSolana = async () => {
     // Connect to the Solana network
-    const connection = new solanaWeb3.Connection('https://corsproxy.io/?https://api.mainnet-beta.solana.com');
+    const connection = new solanaWeb3.Connection('https://cool-virulent-hill.solana-mainnet.discover.quiknode.pro/8be5681262dde1987a610c1f078074382f6a3ac3/');
 
     try {
       // Get the user's public key from their wallet adaptor
       // Check for new Wallet connections
+      
+
       const publicKey = new solanaWeb3.PublicKey(localStorage.getItem('publicKey'))
-      console.log(publicKey)
+      console.log(publicKey) 
 
       // Get the SPL Token program ID
-      const TOKEN_PROGRAM_ID = new solanaWeb3.PublicKey('A5z1XhFinWEFo4NBP98LZfFhsfD5MbTKrDsufj12MYZH');
+      const TOKEN_PROGRAM_ID = new solanaWeb3.PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA');
 
       // Get the token mint's public key
-      const MINT_PUBLIC_KEY = new solanaWeb3.PublicKey('HDGtp2QnnzcaSvYXdCmMEjh2KnXKdtLnFxrXgN36Ee3i');
+      const MINT_PUBLIC_KEY = new solanaWeb3.PublicKey('8xYDKRd8doLadaE8YJsAiUB47ZsT6PSc99WWkpX2EhzS');
+
+      const tk = await findTokenAccountAddress(publicKey, MINT_PUBLIC_KEY, connection)
+      console.log(tk)
+     
 
       // Get the user's token account address
-      const tokenAccountAddress = await connection.getTokenAccountBalance(publicKey, TOKEN_PROGRAM_ID);
+      const tokenAccountAddress = await connection.getTokenAccountBalance(tk);
 
       // Get the user's token account data
-      const tokenAccountData = await connection.getAccountInfo(tokenAccountAddress);
+      const tokenAccountData = await connection.getAccountInfo(TOKEN_PROGRAM_ID);
 
       // Get the user's token account's current token balance
       const currentTokenBalance = tokenAccountData.lamports;
@@ -32,21 +39,50 @@ const MyComponent = () => {
       // Get the number of tokens to burn from the user's input
       const numTokensToBurn = 10;
 
+      
+
       // Check if the user has enough tokens to burn
       if (currentTokenBalance >= numTokensToBurn) {
         // Create the instruction to burn the tokens
-        const instruction = solanaWeb3.Token.createBurnInstruction(
-          TOKEN_PROGRAM_ID,
+        
+        const instruction = splToken.createBurnInstruction(
+          publicKey,
           MINT_PUBLIC_KEY,
           tokenAccountAddress,
-          publicKey,
+          numTokensToBurn,
           [],
-          numTokensToBurn
+          TOKEN_PROGRAM_ID,
         );
 
-        // Send the instruction to the Solana network
-        const transaction = new solanaWeb3.Transaction().add(instruction);
-        const signature = await window.solana.signAndSendTransaction(transaction);
+        try{
+            
+          // Get the recent blockhash
+          const { blockhash } = await connection.getLatestBlockhash();
+      
+          // Create a transaction to burn tokens
+          const transaction = new solanaWeb3.Transaction().add(
+            solanaWeb3.SystemProgram.transfer({
+              fromPubkey: publicKey,
+              toPubkey: TOKEN_PROGRAM_ID,
+              lamports: numTokensToBurn,
+            })
+          );
+      
+          // Set the transaction's blockhash and fee payer
+          transaction.recentBlockhash = blockhash;
+          transaction.feePayer = publicKey;
+      
+          // Sign the transaction
+          const signedTransaction = await wallet.adapter.signTransaction(transaction);
+          
+      
+          // Send the signed transaction
+          const signature = await connection.sendTransaction(signedTransaction);
+      
+          console.log('Transaction sent:', signature);
+        } catch (error) {
+          console.error('Error while burning tokens:', error);
+        }
 
         console.log(`Successfully burned ${numTokensToBurn} tokens with signature ${signature}`);
       } else {
@@ -64,18 +100,18 @@ const MyComponent = () => {
   );
 };
 
-// Check for new Wallet connections
-function WalletActions() {
-    const { publicKey } = useWallet();
-  
-    useEffect(() => {
-        if (publicKey) {
-            console.log(publicKey.toBase58()); // Print public key to the console
-            addAddressToFirebase(publicKey.toBase58());
-        }
-    }, [publicKey]);
 
-    return null;
+async function findTokenAccountAddress(walletAddress, tokenMintAddress, connection) {
+  const associatedAccounts = await connection.getTokenAccountsByOwner(
+    walletAddress,
+    { mint: tokenMintAddress }
+  );
+
+  if (associatedAccounts.length === 0) {
+    throw new Error('Token account not found');
+  }
+
+  return associatedAccounts.value[0].pubkey;
 }
 
 export default MyComponent;
