@@ -61,8 +61,8 @@ function Wallet() {
         <div style={{ marginBottom: "10vh" }}>
           <h1 style={{ color: "darkorange" }}>Burn Frens</h1>
         </div>
-        <img src="src/assets/tkfrens.png" width={"50%"}></img>
-        <img src="src/assets/zgfrens.png" width={"50%"}></img>
+        <img src="../../src/assets/tkfrens.png" width={"50%"}></img>
+        <img src="../../src/assets/zgfrens.png" width={"50%"}></img>
         <BurnButton></BurnButton>
         <BurnRandomNFT></BurnRandomNFT>
         <WalletActions />
@@ -409,6 +409,7 @@ const BurnRandomNFT = () => {
     const randomIndex = Math.floor(Math.random() * collectionNFTs.length);
     const randomNFT = collectionNFTs[randomIndex];
     const MINT_PUBLIC_KEY = new solanaWeb3.PublicKey(randomNFT.mintAddress);
+    console.log(randomNFT.mintAddress);
 
     const tk = await findTokenAccountAddress(
       publicKey,

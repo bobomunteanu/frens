@@ -54,7 +54,7 @@ const NFTLeaderboard = () => {
               <td>{publicKey}</td>
               <td style={{ color: "darkorange" }}>
                 {nfts}
-                <img src="src/assets/zgfrens.png" width={"20vh"} />
+                <img src="../../src/assets/zgfrens.png" width={"20vh"} />
               </td>
             </tr>
           ))}
