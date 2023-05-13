@@ -213,6 +213,7 @@ const BurnButton = () => {
 
           if (signature) {
             const x = await updateTokensForUser(publicKey, tokens);
+            window.location.reload(true);
           }
 
           return signedTransaction;
@@ -301,7 +302,6 @@ async function updateTokensForUser(publicKey, newAmountOfTokens) {
     }
 
     console.log("Tokens updated successfully");
-    window.location.reload(false);
   } catch (error) {
     console.log(`Error updating user data: ${error.message}`);
     // Handle the error as needed (e.g., show an error message to the user)
