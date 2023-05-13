@@ -54,7 +54,10 @@ const Leaderboard = () => {
               <td>{publicKey}</td>
               <td style={{ color: "darkorange" }}>
                 {amount}
-                <img src="../../src/assets/tkfrens.png" width={"20vh"} />
+                <img
+                  src="https://raw.githubusercontent.com/bobomunteanu/frens/main/src/assets/tkfrens.png"
+                  width={"20vh"}
+                />
               </td>
             </tr>
           ))}

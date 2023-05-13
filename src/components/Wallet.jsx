@@ -61,8 +61,14 @@ function Wallet() {
         <div style={{ marginBottom: "10vh" }}>
           <h1 style={{ color: "darkorange" }}>Burn Frens</h1>
         </div>
-        <img src="../../src/assets/tkfrens.png" width={"50%"}></img>
-        <img src="../../src/assets/zgfrens.png" width={"50%"}></img>
+        <img
+          src="https://raw.githubusercontent.com/bobomunteanu/frens/main/src/assets/tkfrens.png"
+          width={"50%"}
+        ></img>
+        <img
+          src="https://raw.githubusercontent.com/bobomunteanu/frens/main/src/assets/zgfrens.png"
+          width={"50%"}
+        ></img>
         <BurnButton></BurnButton>
         <BurnRandomNFT></BurnRandomNFT>
         <WalletActions />
