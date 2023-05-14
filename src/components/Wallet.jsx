@@ -76,7 +76,6 @@ function Wallet() {
           width={"50%"}
         ></img>
         <BurnButton></BurnButton>
-        <BurnRandomNFT></BurnRandomNFT>
         <WalletActions />
       </WalletProvider>
     </ConnectionProvider>

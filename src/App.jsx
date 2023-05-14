@@ -11,16 +11,9 @@ function App() {
   return (
     <div className="main">
       <Navbar></Navbar>
-      <table style={{ marginLeft: "12vw", marginTop: "0vw" }}>
-        <tr>
-          <td>
-            <Leaderboard></Leaderboard>
-          </td>
-          <td style={{ paddingLeft: "5vw" }}>
-            <NFTLeaderboard></NFTLeaderboard>
-          </td>
-        </tr>
-      </table>
+      <div style={{ marginLeft: "15vw" }}>
+        <Leaderboard></Leaderboard>
+      </div>
     </div>
   );
 }

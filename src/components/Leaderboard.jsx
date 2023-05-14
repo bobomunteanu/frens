@@ -37,7 +37,7 @@ const Leaderboard = () => {
   }, []);
 
   return (
-    <div style={{ position: "relative" }}>
+    <div>
       <h1>$FRENS Leaderboard</h1>
       <table>
         <thead>
