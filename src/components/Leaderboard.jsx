@@ -37,9 +37,9 @@ const Leaderboard = () => {
   }, []);
 
   return (
-    <div>
-      <h1>$FRENS</h1>
-      <h2>Leaderboard</h2>
+    <div style={{ marginLeft: "-30%" }}>
+      <h1 style={{ marginLeft: "-30%" }}>$FRENS</h1>
+      <h2 style={{ marginLeft: "-30%" }}>Leaderboard</h2>
       <table>
         <thead>
           <tr>
