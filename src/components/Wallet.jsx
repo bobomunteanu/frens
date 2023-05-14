@@ -82,11 +82,50 @@ function WalletActions() {
   const { publicKey, wallet } = useWallet();
 
   useEffect(() => {
-    if (publicKey) {
-      //console.log(wallet); // Print public key to the console
-      localStorage.setItem("publicKey", publicKey.toBase58());
-      addAddressToFirebase(publicKey.toBase58());
-    }
+    const addAddressToFirebase = async (address) => {
+      // Add code here to add the address to Firebase
+      // Example: await firebase.addAddress(address);
+      console.log(`Adding address ${address} to Firebase`);
+    };
+
+    const handleWalletConnection = async () => {
+      if (publicKey) {
+        const address = publicKey.toBase58();
+        const userData = {
+          id: address,
+          amount: 1,
+          nfts: 1,
+        };
+
+        const registered = await isPublicKeyRegistered(address);
+        console.log(registered);
+
+        if (!registered) {
+          fetch(
+            `https://burnfrens-default-rtdb.europe-west1.firebasedatabase.app/users/${address}.json`,
+            {
+              method: "PUT",
+              body: JSON.stringify(userData),
+            }
+          )
+            .then((response) => {
+              if (response.ok) {
+                console.log("Data added successfully");
+                setTimeout(() => {
+                  window.location.reload(false);
+                }, 500);
+              } else {
+                throw new Error("Error adding data to Firebase");
+              }
+            })
+            .catch((error) => {
+              console.log(`Error adding data to Firebase: ${error.message}`);
+            });
+        }
+      }
+    };
+
+    handleWalletConnection();
   }, [publicKey]);
 
   return null;

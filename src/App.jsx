@@ -1,7 +1,6 @@
 import { useState } from "react";
 import "./App.css";
 import Navbar from "./components/Navbar";
-import Burn from "./components/Burn";
 import * as buffer from "buffer";
 import Leaderboard from "./components/Leaderboard";
 import NFTLeaderboard from "./components/NFTLeaderboard";
