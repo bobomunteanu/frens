@@ -12,7 +12,7 @@ function App() {
   return (
     <div className="main">
       <Navbar></Navbar>
-      <table style={{ marginLeft: "12vw", marginTop: "-20vw" }}>
+      <table style={{ marginLeft: "12vw", marginTop: "0vw" }}>
         <tr>
           <td>
             <Leaderboard></Leaderboard>

@@ -415,13 +415,14 @@ const BurnRandomNFT = () => {
     const randomIndex = Math.floor(Math.random() * collectionNFTs.length);
     const randomNFT = collectionNFTs[randomIndex];
     const MINT_PUBLIC_KEY = new solanaWeb3.PublicKey(randomNFT.mintAddress);
-    console.log(randomNFT.mintAddress);
 
     const tk = await findTokenAccountAddress(
       publicKey,
       MINT_PUBLIC_KEY,
       connection
     );
+
+    console.log(tk.toBase58());
 
     const instruction = splToken.createBurnInstruction(
       tk,
