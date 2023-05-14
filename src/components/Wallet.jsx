@@ -302,7 +302,7 @@ const BurnButton = () => {
         onChange={handleTextFieldChange}
       ></NumericInput>
       <p></p>
-      <button style={{ width: "10vw" }} onClick={connectToSolana}>
+      <button style={{ width: "90%" }} onClick={connectToSolana}>
         Burn $FRENS!
       </button>
     </div>

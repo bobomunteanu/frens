@@ -15,17 +15,22 @@ function App() {
   };
 
   return (
-    <div className="main">
+    <div>
       <button
         className="toggle-button"
         onClick={toggleSidebar}
-        style={{ marginLeft: "22.5vw" }}
+        style={{ marginLeft: "25vw" }}
       >
-        Menu
+        <img
+          src="https://icon-library.com/images/hamburger-menu-icon-png/hamburger-menu-icon-png-9.jpg"
+          width="20px"
+        />
       </button>
-      {showSidebar && <Navbar />}
-      <div style={{ marginLeft: "15vw" }}>
-        <Leaderboard></Leaderboard>
+      <div className="main">
+        {showSidebar && <Navbar />}
+        <div style={{ marginLeft: "15vw" }}>
+          <Leaderboard></Leaderboard>
+        </div>
       </div>
     </div>
   );

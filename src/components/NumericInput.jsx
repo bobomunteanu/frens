@@ -18,7 +18,7 @@ const NumberTextField = ({ value, onChange }) => {
 
   return (
     <input
-      style={{ width: "9vw" }}
+      style={{ width: "90%" }}
       type="text"
       placeholder="$FRENS amount"
       className="numericinput"
