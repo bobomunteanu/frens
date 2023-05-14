@@ -21,7 +21,7 @@ function App() {
         onClick={toggleSidebar}
         style={{
           marginLeft: "8%",
-          marginTop: "-5%",
+          marginTop: "-10%",
           position: "absolute",
         }}
       >
