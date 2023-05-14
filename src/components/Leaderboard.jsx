@@ -38,7 +38,8 @@ const Leaderboard = () => {
 
   return (
     <div>
-      <h1>$FRENS Leaderboard</h1>
+      <h1>$FRENS</h1>
+      <h2>Leaderboard</h2>
       <table>
         <thead>
           <tr>
@@ -51,7 +52,9 @@ const Leaderboard = () => {
           {leaderboardData.map(({ publicKey, amount }, index) => (
             <tr key={publicKey}>
               <td>#{index + 1}</td>
-              <td>{publicKey}</td>
+              <td>
+                {publicKey.slice(0, 4)}. . .{publicKey.slice(-4)}
+              </td>
               <td style={{ color: "darkorange" }}>
                 {amount}
                 <img
