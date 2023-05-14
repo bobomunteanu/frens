@@ -19,7 +19,11 @@ function App() {
       <button
         className="toggle-button"
         onClick={toggleSidebar}
-        style={{ marginLeft: "40vw" }}
+        style={{
+          marginLeft: "8%",
+          marginTop: "-5%",
+          position: "absolute",
+        }}
       >
         <img
           src="https://icon-library.com/images/hamburger-menu-icon-png/hamburger-menu-icon-png-9.jpg"

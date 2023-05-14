@@ -38,8 +38,8 @@ const Leaderboard = () => {
 
   return (
     <div style={{ marginLeft: "-15%" }}>
-      <h1 style={{ marginLeft: "-55%" }}>$FRENS</h1>
-      <h2 style={{ marginLeft: "-55%" }}>Leaderboard</h2>
+      <h1 style={{ marginLeft: "-15%" }}>$FRENS</h1>
+      <h2 style={{ marginLeft: "-15%" }}>Leaderboard</h2>
       <table>
         <thead>
           <tr>
