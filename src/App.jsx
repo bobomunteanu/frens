@@ -16,25 +16,19 @@ function App() {
 
     return (
         <div>
-            <table style={{ marginLeft: "12rem" }}>
-                <tr>
-                    <td>
-                        <h1>$FRENS</h1>
-                    </td>
-                    <td>
-                        <button
-                            className="toggle-button"
-                            onClick={toggleSidebar}
-                        >
-                            <img
-                                src="https://icon-library.com/images/hamburger-menu-icon-png/hamburger-menu-icon-png-9.jpg"
-                                width="20px"
-                            />
-                        </button>
-                    </td>
-                </tr>
-            </table>
-
+            <ul style={{ marginLeft: "10vw" }}>
+                <li>
+                    <h1>$FRENS</h1>
+                </li>
+                <li>
+                    <button className="toggle-button" onClick={toggleSidebar}>
+                        <img
+                            src="https://icon-library.com/images/hamburger-menu-icon-png/hamburger-menu-icon-png-9.jpg"
+                            width="20px"
+                        />
+                    </button>
+                </li>
+            </ul>
             <div className="main">
                 {showSidebar && <Navbar />}
                 <div style={{ marginLeft: "15vw" }}>
