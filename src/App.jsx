@@ -16,7 +16,7 @@ function App() {
 
     return (
         <div>
-            <table style={{ marginLeft: "40%" }}>
+            <table style={{ marginLeft: "12rem" }}>
                 <tr>
                     <td>
                         <h1>$FRENS</h1>
